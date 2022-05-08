@@ -1,10 +1,14 @@
-let mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
-let Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-let ItemSchema = new Schema({
+const ItemSchema = new Schema({
   name: { type: String, required: true },
-  manufacturer: { type: String, required: true },
+  manufacturer: {
+    type: Schema.Types.ObjectId,
+    ref: "Manufacturer",
+    required: true,
+  },
   description: { type: String },
   category: { type: Schema.Types.ObjectId, ref: "Category", required: true },
   price: { type: Number, required: true },
@@ -13,7 +17,7 @@ let ItemSchema = new Schema({
 
 // Virtual for item url
 ItemSchema.virtual("url").get(function () {
-  return "/catalog/item/" + this._id;
+  return "/inventory/items/" + this._id;
 });
 
 module.exports = mongoose.model("Item", ItemSchema);
