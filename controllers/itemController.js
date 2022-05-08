@@ -4,7 +4,7 @@ const Category = require("../models/category");
 
 // Index route
 exports.index = function (req, res) {
-  res.send("/items/index - Not implemented.");
+  res.send("Items index: Not implemented.");
 };
 
 // Items list
