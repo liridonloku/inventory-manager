@@ -4,6 +4,7 @@ let Schema = mongoose.Schema;
 
 let ItemSchema = new Schema({
   name: { type: String, required: true },
+  manufacturer: { type: String, required: true },
   description: { type: String },
   category: { type: Schema.Types.ObjectId, ref: "Category", required: true },
   price: { type: Number, required: true },
