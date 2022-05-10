@@ -3,6 +3,7 @@ const router = express.Router();
 
 const item_controller = require("../controllers/itemController");
 const manufacturer_controller = require("../controllers/manufacturerController");
+const category_controller = require("../controllers/categoryController");
 
 // ITEM ROUTES //
 
@@ -76,5 +77,31 @@ router.get("/manufacturers/:id", manufacturer_controller.manufacturer_detail);
 
 // GET manufacturers list
 router.get("/manufacturers", manufacturer_controller.manufacturers);
+
+// CATEGORY ROUTES //
+
+// GET request for creating a category
+router.get("/categories/create", category_controller.category_create_get);
+
+// POST request for creating a category
+router.post("/categories/create", category_controller.category_create_post);
+
+// GET request to delete category
+router.get("/categories/:id/delete", category_controller.category_delete_get);
+
+// POST request to delete category
+router.post("/categories/:id/delete", category_controller.category_delete_post);
+
+// GET request to update category
+router.get("/categories/:id/update", category_controller.category_update_get);
+
+// POST request to update category
+router.post("/categories/:id/update", category_controller.category_update_post);
+
+// GET request for one category
+router.get("/categories/:id", category_controller.category_detail);
+
+// GET categories list
+router.get("/categories", category_controller.categories);
 
 module.exports = router;
