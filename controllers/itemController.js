@@ -1,15 +1,47 @@
 const Item = require("../models/item");
 const Manufacturer = require("../models/manufacturer");
 const Category = require("../models/category");
+const async = require("async");
 
 // Index route
 exports.index = function (req, res) {
-  res.send("Items index: Not implemented.");
+  async.parallel(
+    {
+      item_count: function (callback) {
+        Item.countDocuments({}, callback);
+      },
+      item_in_stock_count: function (callback) {
+        Item.countDocuments({ number_in_stock: { $gt: 0 } }, callback);
+      },
+      manufacturer_count: function (callback) {
+        Manufacturer.countDocuments({}, callback);
+      },
+      category_count: function (callback) {
+        Category.countDocuments({}, callback);
+      },
+    },
+    function (err, results) {
+      res.render("inventory", {
+        title: "Inventory overview",
+        error: err,
+        data: results,
+      });
+    }
+  );
 };
 
 // Items list
 exports.items = function (req, res, next) {
-  res.send("Items list: Not implemented.");
+  Item.find({}, "name manufacturer")
+    .sort({ name: 1 })
+    .populate("manufacturer")
+    .exec(function (err, items) {
+      if (err) {
+        return next(err);
+      }
+      //Successful, so render
+      res.render("items", { title: "All items", items: items });
+    });
 };
 
 // Single item

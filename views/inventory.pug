@@ -1,0 +1,17 @@
+extends layout 
+
+block content 
+  h1=title 
+
+  if error 
+    p Error getting inventory data.
+  else 
+    ul 
+      li 
+        a(href='/inventory/items') #[strong Items:] !{data.item_count}
+      li 
+        a(href='/inventory/items') #[strong Items in stock:] !{data.item_in_stock_count}
+      li 
+        a(href='/inventory/manufacturers') #[strong Manufacturers:] !{data.manufacturer_count}
+      li 
+        a(href='/inventory/categories') #[strong Categories:] !{data.category_count}
