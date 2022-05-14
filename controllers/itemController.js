@@ -46,7 +46,14 @@ exports.items = function (req, res, next) {
 
 // Single item
 exports.item_detail = function (req, res, next) {
-  res.send("Item details: Not implemented.");
+  Item.findById(req.params.id)
+    .populate(["manufacturer", "category"])
+    .exec(function (err, item) {
+      if (err) {
+        return next(err);
+      }
+      res.render("item_detail", { title: "Single Item", item: item });
+    });
 };
 
 // Item create form on GET
