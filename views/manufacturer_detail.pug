@@ -1,0 +1,18 @@
+extends layout 
+
+block content 
+  h1=title 
+
+  h2=data.manufacturer.name
+
+  ul 
+    each item in data.items
+      li
+        p
+          a(href=item.url) #{item.name}
+        p Category: #{item.category.name}
+        p #{item.description} 
+        p Price: $#{item.price % 1 === 0 ? item.price + '.00' : item.price}
+    
+    else 
+      p This manufacturer has no items.

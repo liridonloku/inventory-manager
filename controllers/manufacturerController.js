@@ -1,4 +1,6 @@
 const Manufacturer = require("../models/manufacturer");
+const Item = require("../models/item");
+const async = require("async");
 
 // Index route
 exports.index = function (req, res) {
@@ -18,7 +20,26 @@ exports.manufacturers = function (req, res, next) {
 
 // Single manufacturer
 exports.manufacturer_detail = function (req, res, next) {
-  res.send("Manufacturer details: Not implemented");
+  async.parallel(
+    {
+      manufacturer: function (callback) {
+        Manufacturer.findById(req.params.id).exec(callback);
+      },
+      items: function (callback) {
+        Item.find({ manufacturer: req.params.id })
+          .populate(["manufacturer", "category"])
+          .sort({ category: 1 })
+          .exec(callback);
+      },
+    },
+    function (err, results) {
+      res.render("manufacturer_detail", {
+        title: "Manufacturer Details",
+        error: err,
+        data: results,
+      });
+    }
+  );
 };
 
 // Manufacturer create form on GET

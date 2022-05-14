@@ -52,7 +52,7 @@ exports.item_detail = function (req, res, next) {
       if (err) {
         return next(err);
       }
-      res.render("item_detail", { title: "Single Item", item: item });
+      res.render("item_detail", { title: "Item details", item: item });
     });
 };
 
