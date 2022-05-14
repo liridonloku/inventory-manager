@@ -1,0 +1,14 @@
+extends layout 
+
+block content 
+  h1=title 
+  h2=manufacturer.name
+
+  form(action=`/inventory/manufacturers/${manufacturer._id}/update`, method="post")
+    label(for="name") Name 
+    input(type="text", name="name", placeholder="Manufacturer name", value=manufacturer.name)
+    button(type="submit") Update
+    if errors 
+      ul 
+        for error in errors 
+          li!= error.msg 

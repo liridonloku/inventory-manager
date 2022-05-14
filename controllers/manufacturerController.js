@@ -39,7 +39,8 @@ exports.manufacturer_detail = function (req, res, next) {
       res.render("manufacturer_detail", {
         title: "Manufacturer Details",
         error: err,
-        data: results,
+        manufacturer: results.manufacturer,
+        items: results.items,
       });
     }
   );
@@ -55,6 +56,7 @@ exports.manufacturer_create_post = [
   // Validate
   body("name", "Name cannot be empty").trim().isLength({ min: 1 }).escape(),
 
+  // Handle request
   function (req, res, next) {
     const errors = validationResult(req);
     const manufacturer = new Manufacturer({ name: req.body.name });
@@ -68,6 +70,7 @@ exports.manufacturer_create_post = [
       });
       return;
     } else {
+      // No errors, save document and redirect
       manufacturer.save(function (err) {
         if (err) {
           return next(err);
@@ -80,13 +83,45 @@ exports.manufacturer_create_post = [
 
 // Manufacturer update form on GET
 exports.manufacturer_update_get = function (req, res, next) {
-  res.send("GET Update manufacturer: Not implemented.");
+  Manufacturer.findById(req.params.id).exec(function (error, result) {
+    if (error) return next(error);
+    res.render("manufacturer_update", {
+      title: "Update manufacturer",
+      manufacturer: result,
+    });
+  });
 };
 
 // Manufacturer update form POST
-exports.manufacturer_update_post = function (req, res, next) {
-  res.send("POST Update manufacturer: Not implemented.");
-};
+exports.manufacturer_update_post = [
+  // Validate
+  body("name", "Name cannot be empty").trim().isLength({ min: 1 }).escape(),
+  function (req, res, next) {
+    const errors = validationResult(req);
+    const manufacturer = new Manufacturer({
+      name: req.body.name,
+      _id: req.params.id,
+    });
+    if (!errors.isEmpty()) {
+      res.render("manufacturer_update", {
+        title: "Update manufacturer",
+        // TODO: Fix manufacturer on empty string submission
+        manufacturer: manufacturer,
+        errors: errors.array(),
+      });
+    } else {
+      Manufacturer.findByIdAndUpdate(
+        req.params.id,
+        manufacturer,
+        {},
+        function (err, manufacturer) {
+          if (err) return next(err);
+          res.redirect(manufacturer.url);
+        }
+      );
+    }
+  },
+];
 
 // Manufacturer delete form on GET
 exports.manufacturer_delete_get = function (req, res, next) {

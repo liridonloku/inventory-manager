@@ -3,10 +3,10 @@ extends layout
 block content 
   h1=title 
 
-  h2=data.manufacturer.name
+  h2=manufacturer.name
 
   ul 
-    each item in data.items
+    each item in items
       li
         p
           a(href=item.url) #{item.name}
@@ -16,3 +16,7 @@ block content
     
     else 
       p This manufacturer has no items.
+  
+  a(href=manufacturer.url + '/update') Update 
+  | 
+  a(href=manufacturer.url + '/delete') Delete 
