@@ -7,7 +7,13 @@ exports.index = function (req, res) {
 
 // Manufacturers list
 exports.manufacturers = function (req, res, next) {
-  res.send("Manufacturers list: Not implemented");
+  Manufacturer.find({}).exec(function (err, manufacturers) {
+    if (err) return next(err);
+    res.render("manufacturers", {
+      title: "Manufacturers",
+      manufacturers: manufacturers,
+    });
+  });
 };
 
 // Single manufacturer

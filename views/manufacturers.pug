@@ -1,0 +1,12 @@
+extends layout
+
+block content 
+  h1=title 
+
+  ul 
+    each manufacturer in manufacturers 
+      li
+        a(href=manufacturer.url) #{manufacturer.name}
+    
+    else 
+      p No manufacturers.
