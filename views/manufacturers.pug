@@ -6,7 +6,10 @@ block content
   ul 
     each manufacturer in manufacturers 
       li
-        a(href=manufacturer.url) #{manufacturer.name}
+        p 
+          a(href=manufacturer.url) #{manufacturer.name}
     
     else 
       p No manufacturers.
+
+  a(class='btn btn-primary' href='/inventory/manufacturers/create') New
