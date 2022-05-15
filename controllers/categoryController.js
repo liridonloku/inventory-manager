@@ -7,7 +7,12 @@ exports.index = function (req, res) {
 
 // Category list
 exports.categories = function (req, res) {
-  res.send("Categories list: Not implemented");
+  Category.find({}).exec(function (err, results) {
+    res.render("categories", {
+      title: "Categories",
+      categories: results,
+    });
+  });
 };
 
 // Single category
