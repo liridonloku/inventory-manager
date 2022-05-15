@@ -1,0 +1,22 @@
+extends layout 
+
+block content 
+  h1=title 
+
+  h2=category.name
+
+  ul 
+    each item in items
+      li
+        p
+          a(href=item.url) #{item.name}
+        p Manufacturer: #{item.manufacturer.name}
+        p #{item.description} 
+        p Price: $#{item.price % 1 === 0 ? item.price + '.00' : item.price}
+    
+    else 
+      p This category has no items.
+  
+  a(href=category.url + '/update') Update 
+  | 
+  a(href=category.url + '/delete') Delete 

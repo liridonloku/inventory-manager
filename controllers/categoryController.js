@@ -1,4 +1,6 @@
 const Category = require("../models/category");
+const Item = require("../models/item");
+const async = require("async");
 
 // Index route
 exports.index = function (req, res) {
@@ -16,8 +18,27 @@ exports.categories = function (req, res) {
 };
 
 // Single category
-exports.category_detail = function (req, res) {
-  res.send("Category detail: Not implemented");
+exports.category_detail = function (req, res, next) {
+  async.parallel(
+    {
+      category: function (callback) {
+        Category.findById(req.params.id).exec(callback);
+      },
+      items: function (callback) {
+        Item.find({ category: req.params.id })
+          .populate("manufacturer")
+          .exec(callback);
+      },
+    },
+    function (err, results) {
+      if (err) return next(err);
+      res.render("category_detail", {
+        title: "Category details",
+        category: results.category,
+        items: results.items,
+      });
+    }
+  );
 };
 
 // Category create form on GET
