@@ -1,6 +1,7 @@
 const Category = require("../models/category");
 const Item = require("../models/item");
 const async = require("async");
+const { body, validationResult } = require("express-validator");
 
 // Index route
 exports.index = function (req, res) {
@@ -43,13 +44,36 @@ exports.category_detail = function (req, res, next) {
 
 // Category create form on GET
 exports.category_create_get = function (req, res, next) {
-  res.send("GET Create category: Not implemented.");
+  res.render("category_form", {
+    title: "Create new category",
+  });
 };
 
 // Category create form POST
-exports.category_create_post = function (req, res, next) {
-  res.send("POST Create category: Not implemented.");
-};
+exports.category_create_post = [
+  // Validate and sanitize input
+  body("name", "Name cannot be empty").trim().isLength({ min: 1 }).escape(),
+
+  // Handle request
+  function (req, res, next) {
+    const errors = validationResult(req);
+    const category = new Category({ name: req.body.name });
+
+    if (!errors.isEmpty()) {
+      res.render("category_form", {
+        title: "Create new category",
+        errors: errors.array(),
+        category: category,
+      });
+    } else {
+      // No errors, save document
+      category.save(function (err) {
+        if (err) return next(err);
+        res.redirect(category.url);
+      });
+    }
+  },
+];
 
 // Category update form on GET
 exports.category_update_get = function (req, res, next) {
