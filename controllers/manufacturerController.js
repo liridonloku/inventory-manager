@@ -96,7 +96,10 @@ exports.manufacturer_update_get = function (req, res, next) {
 exports.manufacturer_update_post = [
   // Validate
   body("name", "Name cannot be empty").trim().isLength({ min: 1 }).escape(),
-  function (req, res, next) {
+
+  // Handle update
+  async function (req, res, next) {
+    const oldManufacturer = await Manufacturer.findById(req.params.id);
     const errors = validationResult(req);
     const manufacturer = new Manufacturer({
       name: req.body.name,
@@ -105,8 +108,7 @@ exports.manufacturer_update_post = [
     if (!errors.isEmpty()) {
       res.render("manufacturer_update", {
         title: "Update manufacturer",
-        // TODO: Fix manufacturer on empty string submission
-        manufacturer: manufacturer,
+        manufacturer: oldManufacturer,
         errors: errors.array(),
       });
     } else {

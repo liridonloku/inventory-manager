@@ -5,8 +5,8 @@ block content
   h2=manufacturer.name
 
   form(action=`/inventory/manufacturers/${manufacturer._id}/update`, method="post")
-    label(for="name") Name 
-    input(type="text", name="name", placeholder="Manufacturer name", value=manufacturer.name)
+    label(for="name") New name 
+    input(type="text", name="name", placeholder="Manufacturer name")
     button(type="submit") Update
     if errors 
       ul 
