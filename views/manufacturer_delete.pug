@@ -1,0 +1,17 @@
+extends layout 
+
+block content 
+  h1=title 
+  h2=manufacturer.name 
+
+  if items.length > 0
+    p You need to delete these items before you can delete this manufacturer: 
+    ul 
+      each item in items 
+        li 
+          a(href=item.url) #[strong #{item.name}]
+  else 
+    p Are you sure you want to delete #{manufacturer.name}?
+    form(action="", method="post") 
+      input#manufacturerid(type="hidden" name='manufacturerid', required='true', value=manufacturer._id)
+      button(type="submit") Delete

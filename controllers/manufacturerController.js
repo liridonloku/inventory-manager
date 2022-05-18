@@ -127,10 +127,61 @@ exports.manufacturer_update_post = [
 
 // Manufacturer delete form on GET
 exports.manufacturer_delete_get = function (req, res, next) {
-  res.send("GET Delete manufacturer: Not implemented.");
+  async.parallel(
+    {
+      manufacturer: function (callback) {
+        Manufacturer.findById(req.params.id).exec(callback);
+      },
+      items: function (callback) {
+        Item.find({ manufacturer: req.params.id })
+          .sort({ name: 1 })
+          .exec(callback);
+      },
+    },
+    function (err, results) {
+      if (err) return next(err);
+
+      res.render("manufacturer_delete", {
+        title: "Delete manufacturer",
+        manufacturer: results.manufacturer,
+        items: results.items,
+      });
+    }
+  );
 };
 
 // Manufacturer delete form POST
 exports.manufacturer_delete_post = function (req, res, next) {
-  res.send("POST Delete manufacturer: Not implemented.");
+  async.parallel(
+    {
+      manufacturer: function (callback) {
+        Manufacturer.findById(req.body.manufacturerid).exec(callback);
+      },
+      items: function (callback) {
+        Item.find({ manufacturer: req.body.manufacturerid })
+          .sort({ name: 1 })
+          .exec(callback);
+      },
+    },
+    function (err, results) {
+      if (err) return next(err);
+
+      // Manufacturer has items, re-render page
+      if (results.items.length > 0) {
+        res.render("manufacturer_delete", {
+          title: "Delete manufacturer",
+          manufacturer: results.manufacturer,
+          items: results.items,
+        });
+        return;
+      } else {
+        // Manufacturer can be deleted
+        Manufacturer.findByIdAndRemove(req.body.manufacturerid, function (err) {
+          if (err) return next(err);
+
+          res.redirect("/inventory/manufacturers");
+        });
+      }
+    }
+  );
 };

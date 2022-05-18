@@ -6,7 +6,7 @@ block content
     each item in items
       li
         a(href=item.url) #{item.name}
-        | - #{item.manufacturer.name}
+        |  - #{item.manufacturer.name}
     
     else 
       li There are no items.
