@@ -9,3 +9,6 @@ block content
   p #{item.description} 
   p Price: $#{item.price % 1 === 0 ? item.price + '.00' : item.price}
   p Stock: #{item.number_in_stock}
+  p
+    a(href=item.url + '/update') Update  
+    a(href=item.url + '/delete') Delete  

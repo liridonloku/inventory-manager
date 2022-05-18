@@ -4,21 +4,21 @@ block content
 
   h1=title 
 
-  form(action="/inventory/items/create", method="post")
+  form(action="", method="post")
 
     label(for='name') Name
     input#name(type="text" name='name' placeholder='Item name' required='true' value=(item ? item.name : ''))
 
     select#manufacturer(name="manufacturer" placeholder='Select manufacturer' required='true')
       each manufacturer in manufacturers 
-        option(value=manufacturer._id selected=((item && item.manufacturer === manufacturer._id) ? 'true' : false)) #{manufacturer.name}
+        option(value=manufacturer._id selected=((item && item.manufacturer == manufacturer._id.toString()) ? 'true' : false)) #{manufacturer.name}
 
     select#category(name="category" placeholder='Select category' required='true')
       each category in categories 
-        option(value=category._id selected=((item && item.category === category._id) ? 'true' : false))  #{category.name}
+        option(value=category._id selected=((item && item.category == category._id.toString()) ? 'true' : false))  #{category.name}
 
     label(for='description') Description 
-    textarea#description(name="description", cols="30", rows="10" required='true' value=(item ? item.description : ''))
+    textarea#description(name="description", cols="30", rows="10") #{item ? item.description : ''}
 
     label(for='price') Price 
     input#price(type="number", name="price" required='true' min='0' max='99000' step='0.01' value=(item ? item.price : ''))
