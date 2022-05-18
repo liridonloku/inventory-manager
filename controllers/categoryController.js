@@ -10,12 +10,14 @@ exports.index = function (req, res) {
 
 // Category list
 exports.categories = function (req, res) {
-  Category.find({}).exec(function (err, results) {
-    res.render("categories", {
-      title: "Categories",
-      categories: results,
+  Category.find({})
+    .sort({ name: 1 })
+    .exec(function (err, results) {
+      res.render("categories", {
+        title: "Categories",
+        categories: results,
+      });
     });
-  });
 };
 
 // Single category
@@ -69,7 +71,7 @@ exports.category_create_post = [
       // No errors, save document
       category.save(function (err) {
         if (err) return next(err);
-        res.redirect(category.url);
+        res.redirect("/inventory/categories");
       });
     }
   },
@@ -77,14 +79,48 @@ exports.category_create_post = [
 
 // Category update form on GET
 exports.category_update_get = function (req, res, next) {
-  res.send("GET Update category: Not implemented.");
+  Category.findById(req.params.id).exec(function (error, result) {
+    if (error) return next(error);
+    res.render("category_update", {
+      title: "Update category",
+      category: result,
+    });
+  });
 };
 
 // Category update form POST
-exports.category_update_post = function (req, res, next) {
-  res.send("POST Update category: Not implemented.");
-};
+exports.category_update_post = [
+  // Validate
+  body("name", "Name cannot be empty").trim().isLength({ min: 1 }).escape(),
 
+  // Handle update
+  async function (req, res, next) {
+    const odlCategory = await Category.findById(req.params.id);
+    const errors = validationResult(req);
+    const newCategory = new Category({
+      name: req.body.name,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      res.render("category_update", {
+        title: "Update category",
+        category: odlCategory,
+        errors: errors.array(),
+      });
+    } else {
+      Category.findByIdAndUpdate(
+        req.params.id,
+        newCategory,
+        {},
+        function (err, category) {
+          if (err) return next(err);
+          res.redirect(category.url);
+        }
+      );
+    }
+  },
+];
 // Category delete form on GET
 exports.category_delete_get = function (req, res, next) {
   res.send("GET Delete category: Not implemented.");

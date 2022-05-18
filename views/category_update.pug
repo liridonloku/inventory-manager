@@ -1,0 +1,14 @@
+extends layout 
+
+block content 
+  h1=title 
+  h2=category.name
+
+  form(action=`/inventory/categories/${category._id}/update`, method="post")
+    label(for="name") New name 
+    input(type="text", name="name", placeholder="Category name")
+    button(type="submit") Update
+    if errors 
+      ul 
+        for error in errors 
+          li!= error.msg 
