@@ -123,10 +123,59 @@ exports.category_update_post = [
 ];
 // Category delete form on GET
 exports.category_delete_get = function (req, res, next) {
-  res.send("GET Delete category: Not implemented.");
+  async.parallel(
+    {
+      category: function (callback) {
+        Category.findById(req.params.id).exec(callback);
+      },
+      items: function (callback) {
+        Item.find({ category: req.params.id }).sort({ name: 1 }).exec(callback);
+      },
+    },
+    function (err, results) {
+      if (err) return next(err);
+
+      res.render("category_delete", {
+        title: "Delete category",
+        category: results.category,
+        items: results.items,
+      });
+    }
+  );
 };
 
 // Category delete form POST
 exports.category_delete_post = function (req, res, next) {
-  res.send("POST Delete category: Not implemented.");
+  async.parallel(
+    {
+      category: function (callback) {
+        Category.findById(req.body.categoryid).exec(callback);
+      },
+      items: function (callback) {
+        Item.find({ category: req.body.categoryid })
+          .sort({ name: 1 })
+          .exec(callback);
+      },
+    },
+    function (err, results) {
+      if (err) return next(err);
+
+      // Category has items, re-render page
+      if (results.items.length > 0) {
+        res.render("category_delete", {
+          title: "Delete category",
+          category: results.category,
+          items: results.items,
+        });
+        return;
+      } else {
+        // Category can be deleted
+        Category.findByIdAndRemove(req.body.categoryid, function (err) {
+          if (err) return next(err);
+
+          res.redirect("/inventory/categories");
+        });
+      }
+    }
+  );
 };
