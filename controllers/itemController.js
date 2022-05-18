@@ -76,6 +76,7 @@ exports.item_create_get = function (req, res, next) {
       // Render form
       res.render("item_form", {
         title: "New item",
+        type: "Create",
         categories: results.categories,
         manufacturers: results.manufacturers,
       });
@@ -136,6 +137,7 @@ exports.item_create_post = [
           res.render("item_form", {
             title: "New item",
             item: item,
+            type: "Create",
             categories: results.categories,
             manufacturers: results.manufacturers,
             errors: errors.array(),
@@ -173,6 +175,7 @@ exports.item_update_get = function (req, res, next) {
       res.render("item_form", {
         title: `Update Item: ${results.item.name}`,
         item: results.item,
+        type: "Update",
         manufacturers: results.manufacturers,
         categories: results.categories,
       });
@@ -235,6 +238,7 @@ exports.item_update_post = [
           res.render("item_form", {
             title: `Update item: ${results.oldItem.name}`,
             item: item,
+            type: "Update",
             categories: results.categories,
             manufacturers: results.manufacturers,
             errors: errors.array(),
@@ -255,10 +259,21 @@ exports.item_update_post = [
 
 // Item delete form on GET
 exports.item_delete_get = function (req, res, next) {
-  res.send("GET Delete item: Not implemented.");
+  Item.findById(req.params.id).exec(function (err, result) {
+    if (err) return next(err);
+
+    res.render("item_delete", {
+      title: "Delete item",
+      item: result,
+    });
+  });
 };
 
 // Item delete form POST
 exports.item_delete_post = function (req, res, next) {
-  res.send("POST Delete item: Not implemented.");
+  Item.findByIdAndRemove(req.body.itemid, function (err) {
+    if (err) return next(err);
+
+    res.redirect("/inventory/items");
+  });
 };

@@ -26,7 +26,7 @@ block content
     label(for='number_in_stock') Number in stock 
     input#number_in_stock(type="number", name="number_in_stock" required='true' value=(item ? item.number_in_stock : ''))
 
-    button(type="submit") Create
+    button(type="submit") #{type}
 
   if errors 
     ul
