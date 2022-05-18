@@ -2,6 +2,7 @@ const Item = require("../models/item");
 const Manufacturer = require("../models/manufacturer");
 const Category = require("../models/category");
 const async = require("async");
+const { body, validationResult } = require("express-validator");
 
 // Index route
 exports.index = function (req, res) {
@@ -58,13 +59,111 @@ exports.item_detail = function (req, res, next) {
 
 // Item create form on GET
 exports.item_create_get = function (req, res, next) {
-  res.send("GET Create item: Not implemented.");
+  // Get manufacturers for the form
+  // Get categories for the form
+  async.parallel(
+    {
+      manufacturers: function (callback) {
+        Manufacturer.find({}).sort({ name: 1 }).exec(callback);
+      },
+      categories: function (callback) {
+        Category.find({}).sort({ name: 1 }).exec(callback);
+      },
+    },
+    function (error, results) {
+      if (error) return next(error);
+
+      // Render form
+      res.render("item_form", {
+        title: "New item",
+        categories: results.categories,
+        manufacturers: results.manufacturers,
+      });
+    }
+  );
 };
 
 // Item create form POST
-exports.item_create_post = function (req, res, next) {
-  res.send("POST Create item: Not implemented.");
-};
+exports.item_create_post = [
+  // Validate and sanitize
+  body("name", "Name cannot be empty").trim().isLength({ min: 1 }).escape(),
+  body("manufacturer", "Manufacturer cannot be empty")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("category", "Category cannot be empty")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("description", "Description cannot be empty")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("price", "Price cannot be empty").trim().isLength({ min: 1 }).escape(),
+  body("number_in_stock", "Number in stock cannot be empty")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  // Handle request
+  function (req, res, next) {
+    const errors = validationResult(req);
+    const item = new Item({
+      name: req.body.name,
+      manufacturer: req.body.manufacturer,
+      category: req.body.category,
+      description: req.body.description,
+      price: req.body.price,
+      number_in_stock: req.body.number_in_stock,
+    });
+    // Error
+    if (!errors.isEmpty()) {
+      // Re-render form
+      async.parallel(
+        {
+          manufacturers: function (callback) {
+            Manufacturer.find({}).sort({ name: 1 }).exec(callback);
+          },
+          categories: function (callback) {
+            Category.find({}).sort({ name: 1 }).exec(callback);
+          },
+        },
+        function (error, results) {
+          if (error) return next(error);
+
+          // Render form
+          res.render("item_form", {
+            title: "New item",
+            item: item,
+            categories: results.categories,
+            manufacturers: results.manufacturers,
+            errors: errors.array(),
+          });
+        }
+      );
+    } else {
+      async.parallel(
+        {
+          manufacturers: function (callback) {
+            Manufacturer.find({}).sort({ name: 1 }).exec(callback);
+          },
+          categories: function (callback) {
+            Category.find({}).sort({ name: 1 }).exec(callback);
+          },
+        },
+        function (error, results) {
+          if (error) return next(error);
+
+          // Save document and redirect
+          item.save(function (err) {
+            if (err) return next(err);
+            res.redirect(item.url);
+          });
+        }
+      );
+    }
+  },
+  // Success
+];
 
 // Item update form on GET
 exports.item_update_get = function (req, res, next) {
