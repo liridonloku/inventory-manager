@@ -4,6 +4,9 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var compression = require("compression");
+var helmet = require("helmet");
+var dotenv = require("dotenv");
+dotenv.config();
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
@@ -13,7 +16,7 @@ var app = express();
 
 // Mongoose and mongoDB setup
 let mongoose = require("mongoose");
-var dev_deb_url = `mongodb+srv://m001-student:m001-mongodb-basics@sandbox.jxxcw.mongodb.net/inventory-manager?retryWrites=true&w=majority`;
+var dev_deb_url = `disabled`;
 let mongoDB = process.env.MONGODB_URI || dev_deb_url;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 var db = mongoose.connection;
@@ -28,6 +31,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(compression());
+app.use(helmet());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
