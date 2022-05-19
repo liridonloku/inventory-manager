@@ -1,13 +1,13 @@
 extends layout 
 
 block content 
-  h1=title 
-  h2=manufacturer.name
+  h1.text-center=title 
+  h2.text-primary=manufacturer.name
 
   form(action=`/inventory/manufacturers/${manufacturer._id}/update`, method="post")
-    label(for="name") New name 
-    input(type="text", name="name", placeholder="Manufacturer name")
-    button(type="submit") Update
+    label.form-label(for="name") New name:
+    input.form-control.mb-2(type="text", name="name", placeholder="Manufacturer name")
+    button.btn.btn-primary(type="submit") Update
     if errors 
       ul 
         for error in errors 

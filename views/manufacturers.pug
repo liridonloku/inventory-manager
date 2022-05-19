@@ -1,15 +1,13 @@
 extends layout
 
 block content 
-  h1=title 
+  h1.text-center=title
+  a.btn.btn-primary.mb-2(href='/inventory/manufacturers/create') New manufacturer
 
-  ul 
+  ul.list-group
     each manufacturer in manufacturers 
-      li
-        p 
-          a(href=manufacturer.url) #{manufacturer.name}
+      li.list-group-item.list-goup-item-action.d-flex.justify-content-between.align-items-center
+        a.btn.flex-grow-1.text-start(href=manufacturer.url) #{manufacturer.name}
     
     else 
       p No manufacturers.
-
-  a(class='btn btn-primary' href='/inventory/manufacturers/create') New

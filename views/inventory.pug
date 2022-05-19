@@ -6,11 +6,13 @@ block content
   if error 
     p Error getting inventory data. Refresh the page or try again later.
   else 
-    ul 
-      li 
-        a(href='/inventory/items') #[strong Items:] !{data.item_count} 
-        | (!{data.item_in_stock_count} in stock)
-      li 
-        a(href='/inventory/manufacturers') #[strong Manufacturers:] !{data.manufacturer_count}
-      li 
-        a(href='/inventory/categories') #[strong Categories:] !{data.category_count}
+    ul.list-group 
+      li.list-group-item.list-goup-item-action.d-flex.justify-content-between.align-items-center
+        a.btn.flex-grow-1.text-start(href='/inventory/items') #[strong Items]
+        span.badge.bg-primary.rounded-pill #{data.item_count}
+      li.list-group-item.d-flex.justify-content-between.align-items-center
+        a.btn.flex-grow-1.text-start(href='/inventory/manufacturers') #[strong Manufacturers]
+        span.badge.bg-primary.rounded-pill #{data.manufacturer_count}
+      li.list-group-item.d-flex.justify-content-between.align-items-center
+        a.btn.flex-grow-1.text-start(href='/inventory/categories') #[strong Categories]
+        span.badge.bg-primary.rounded-pill #{data.category_count}

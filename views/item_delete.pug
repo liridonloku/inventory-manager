@@ -2,11 +2,11 @@ extends layout
 
 block content 
 
-  h1=title 
-  h2=item.name 
+  h1.text-center=title 
+  h2.text-primary=item.name 
 
-  p Are you sure you want to delete #{item.name}
+  p Are you sure you want to delete #{item.name}?
 
   form(action="", method="post") 
     input#itemid(type="hidden" name='itemid', required='true', value=item._id)
-    button(type="submit") Delete
+    button.btn.btn-danger(type="submit") Delete

@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
-  p Go to 
-    a(href='/inventory') #[strong Inventory]
+  div.h-100.w-100.d-flex.flex-column.justify-content-center.align-items-center
+    h1.mb-3= title
+    p Go to 
+      a(href='/inventory' class='btn btn-primary') Inventory

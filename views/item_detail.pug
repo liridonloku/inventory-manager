@@ -1,14 +1,14 @@
 extends layout 
 
 block content 
-  h1=title 
+  h1.text-center.mb-5=title 
 
-  p #{item.name}
-  p Category: #{item.category.name} 
-  p Manufacturer: #{item.manufacturer.name} 
-  p #{item.description} 
-  p Price: $#{item.price % 1 === 0 ? item.price + '.00' : item.price}
-  p Stock: #{item.number_in_stock}
-  p
-    a(href=item.url + '/update') Update  
-    a(href=item.url + '/delete') Delete  
+  h2.text-primary #{item.name}
+  p #[strong Manufacturer:] #{item.manufacturer.name} 
+  p #[strong Category:] #{item.category.name} 
+  p #[strong Description:] #{item.description} 
+  p #[strong Price:] $#{item.price % 1 === 0 ? item.price + '.00' : item.price}
+  p #[strong Stock:] #{item.number_in_stock}
+  div
+    a.btn.btn-primary.me-2(href=item.url + '/update') Update  
+    a.btn.btn-danger(href=item.url + '/delete') Delete  

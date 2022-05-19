@@ -1,8 +1,8 @@
 extends layout 
 
 block content 
-  h1=title 
-  h2=manufacturer.name 
+  h1.text-center=title 
+  h2.text-primary=manufacturer.name 
 
   if items.length > 0
     p You need to delete these items before you can delete this manufacturer: 
@@ -14,4 +14,4 @@ block content
     p Are you sure you want to delete #{manufacturer.name}?
     form(action="", method="post") 
       input#manufacturerid(type="hidden" name='manufacturerid', required='true', value=manufacturer._id)
-      button(type="submit") Delete
+      button.btn.btn-danger(type="submit") Delete

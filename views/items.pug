@@ -1,13 +1,17 @@
 extends layout
 
 block content
-  h1= title 
-  ul
+  h1.text-center= title 
+  a.btn.btn-primary.mb-3(href="/inventory/items/create") New Item 
+  .row
     each item in items
-      li
-        a(href=item.url) #{item.name}
-        |  - #{item.manufacturer.name}
+      .col-sm-auto.mb-3.w-100
+        .card.h-100.d-flex.flex-column.justify-content-space-between 
+          .card-body 
+            h5.card-title.text-primary #{item.name}
+            p.card-text Price: $#{item.price}
+            p.card-text Stock: #{item.number_in_stock}
+            a.btn.btn-primary(href=item.url) Details
     
     else 
-      li There are no items.
-  a(href="/inventory/items/create") New Item 
+      p There are no items.

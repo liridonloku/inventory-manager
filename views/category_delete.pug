@@ -1,8 +1,8 @@
 extends layout 
 
 block content 
-  h1=title 
-  h2=category.name 
+  h1.text-center=title 
+  h2.text-primary=category.name 
 
   if items.length > 0
     p You need to delete these items before you can delete this category: 
@@ -14,4 +14,4 @@ block content
     p Are you sure you want to delete #{category.name}?
     form(action="", method="post") 
       input#categoryid(type="hidden" name='categoryid', required='true', value=category._id)
-      button(type="submit") Delete
+      button.btn.btn-danger(type="submit") Delete

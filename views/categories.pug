@@ -1,13 +1,12 @@
 extends layout 
 
 block content 
-  h1=title 
-  ul 
+  h1.text-center=title 
+  a.btn.btn-primary.mb-2(href='/inventory/categories/create') New
+  ul.list-group
     each category in categories 
-      li 
-        p 
-          a(href=category.url) #[strong #{category.name}]
+      li.list-group-item.list-goup-item-action.d-flex.justify-content-between.align-items-center
+        a.btn.flex-grow-1.text-start(href=category.url) #[strong #{category.name}]
     else 
       p No categories.
 
-  a(class='btn btn-primary' href='/inventory/categories/create') New

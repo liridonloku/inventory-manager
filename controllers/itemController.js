@@ -33,7 +33,7 @@ exports.index = function (req, res) {
 
 // Items list
 exports.items = function (req, res, next) {
-  Item.find({}, "name manufacturer")
+  Item.find({})
     .sort({ name: 1 })
     .populate("manufacturer")
     .exec(function (err, items) {
